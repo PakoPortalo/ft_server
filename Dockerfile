@@ -43,5 +43,10 @@ RUN exit
 
 RUN service nginx restart
 
+CMD service nginx start && \
+  service mysql start && \
+  service php7.3-fpm start && \
+  sleep infinity
+
 
 
