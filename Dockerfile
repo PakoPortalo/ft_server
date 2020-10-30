@@ -20,11 +20,11 @@ RUN cd /var/www/html && \
 	mv phpMyAdmin-5.0.4-all-languages phpmyadmin
 COPY src/default /etc/nginx/sites-available
 
-#Reloading services
+#SSL shit
 
-RUN service nginx restart && \
-	service php7.3-fpm restart && \
-	service mysql restart
+RUN cd /home/ && \
+	openssl req -newkey rsa:2048 -nodes -keyout privkey.pem -x509 -days 36500 -out certificate.pem -subj \
+	"/C=US/ST=NRW/L=Earth/O=CompanyName/OU=IT/CN=www.example.com/emailAddress=email@example.com"
 
 #Setting Wordpress
 
