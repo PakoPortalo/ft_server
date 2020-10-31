@@ -37,12 +37,13 @@ COPY src/wp-config.php /var/www/html/wordpress
 
 
 COPY /src/create_db.sql /tmp/create_db.sql
-RUN service mysql start && \
+RUN rm /var/www/html/index.nginx-debian.html && \
+	service mysql start && \
 	mysql -u root < /tmp/create_db.sql
 
 #Reloading services
 
-COPY src/index.php /var/www/html/
+COPY src/porrasconchorizo.php /var/www/html/
 COPY src/info.php /var/www/html/
 RUN service nginx restart && \
 	service php7.3-fpm restart
