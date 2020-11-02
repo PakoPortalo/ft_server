@@ -20,17 +20,21 @@ RUN cd /var/www/html && \
 	mv phpMyAdmin-5.0.4-all-languages phpmyadmin
 COPY src/default /etc/nginx/sites-available
 
-#SSL shit
+#SSL
 
 RUN cd /home/ && \
 	openssl req -newkey rsa:2048 -nodes -keyout privkey.pem -x509 -days 36500 -out certificate.pem -subj \
 	"/C=US/ST=NRW/L=Earth/O=CompanyName/OU=IT/CN=www.example.com/emailAddress=email@example.com"
+RUN chown -R www-data:www-data /var/www/* && \
+	chmod -R 775 /var/www/*
 
 #Setting Wordpress
 
 RUN cd /var/www/html && \
 	wget https://wordpress.org/latest.tar.gz && \
 	tar -xzvf latest.tar.gz
+RUN chown -R www-data:www-data /var/www/html/ && \
+	chmod -R 755 /var/www/html/
 COPY src/wp-config.php /var/www/html/wordpress
 
 #Creating a database in Mariadb
@@ -39,7 +43,7 @@ COPY src/wp-config.php /var/www/html/wordpress
 COPY /src/create_db.sql /tmp/create_db.sql
 RUN rm /var/www/html/index.nginx-debian.html && \
 	service mysql start && \
-	mysql -u root < /tmp/create_db.sql
+	mysql -u root < /tmp/create_db.sql;
 
 #Reloading services
 
